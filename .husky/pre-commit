@@ -1,1 +1,11 @@
-npx lint-staged
+# Run our custom linting script on staged JS files
+STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.js$')
+if [ -n "$STAGED_JS_FILES" ]; then
+  ./lint-js.sh $STAGED_JS_FILES
+  if [ $? -ne 0 ]; then
+    echo "❌ Commit blocked: JavaScript files have errors that need to be fixed"
+    exit 1
+  fi
+  # Re-add files that were modified by the linter
+  git add $STAGED_JS_FILES
+fi
