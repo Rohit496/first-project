@@ -24,3 +24,9 @@ const country = 'USA';
 if (country === 'USA') {
   console.log('USA');
 }
+
+// Add a test without error
+if (country === 'USA') {
+  // Fixed - using === instead of ==
+  console.log('No error test');
+}
