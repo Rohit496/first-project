@@ -1,1 +1,1 @@
-echo "This course for git and github"
+npx lint-staged
