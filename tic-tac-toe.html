@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tic-Tac-Toe</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          sans-serif;
+        --bg:
+          radial-gradient(circle at 10% 20%, #dbeafe 0, transparent 25%),
+          radial-gradient(circle at 90% 10%, #ffe4e6 0, transparent 22%),
+          radial-gradient(circle at 80% 80%, #e0f2fe 0, transparent 25%),
+          #0f172a;
+        --card: rgba(255, 255, 255, 0.9);
+        --border: #e2e8f0;
+        --primary: #4338ca;
+        --primary-dark: #312e81;
+        --text: #0f172a;
+        --muted: #6b7280;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        color: var(--text);
+        padding: 24px;
+      }
+
+      .shell {
+        width: min(960px, 100%);
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+      }
+
+      @media (max-width: 820px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.16);
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 1.9rem;
+        letter-spacing: -0.02em;
+      }
+
+      .sub {
+        margin: 0 0 18px;
+        color: var(--muted);
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: #eef2ff;
+        color: #312e81;
+        border-radius: 999px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        border: 1px solid #c7d2fe;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 12px 0 16px;
+      }
+
+      .cell {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border: 2px solid #e5e7eb;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-size: 2.7rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        color: #0f172a;
+        background: linear-gradient(145deg, #fff, #f5f7ff);
+        cursor: pointer;
+        transition:
+          transform 120ms ease,
+          border 120ms ease,
+          box-shadow 120ms ease,
+          background 140ms ease;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      }
+
+      .cell:hover {
+        background: linear-gradient(145deg, #eef2ff, #e0e7ff);
+        transform: translateY(-2px);
+        border-color: #4338ca;
+        box-shadow: 0 14px 28px rgba(67, 56, 202, 0.2);
+      }
+
+      .cell:disabled {
+        cursor: not-allowed;
+        opacity: 0.9;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .cell.win {
+        background: linear-gradient(145deg, #ecfdf3, #dcfce7);
+        border-color: #22c55e;
+        box-shadow: 0 16px 34px rgba(34, 197, 94, 0.2);
+      }
+
+      .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        padding: 10px 16px;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition:
+          transform 120ms ease,
+          box-shadow 140ms ease,
+          border 120ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+        border-color: #cbd5e1;
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, #4f46e5, #4338ca);
+        color: #fff;
+        border: none;
+      }
+
+      .sidebar {
+        display: grid;
+        gap: 16px;
+      }
+
+      .scoreboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+      }
+
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+      }
+
+      .stat h3 {
+        margin: 0 0 4px;
+        font-size: 1rem;
+        color: var(--muted);
+      }
+
+      .stat .value {
+        font-size: 1.8rem;
+        font-weight: 800;
+      }
+
+      .tips {
+        font-size: 0.95rem;
+        color: var(--muted);
+        line-height: 1.5;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="card">
+        <h1>Tic-Tac-Toe</h1>
+        <p class="sub">
+          Play with a friend on the same screen. First to align 3 wins.
+        </p>
+        <div class="status-pill" id="statusText">Player X, make your move.</div>
+        <div id="board" class="board" aria-label="Tic Tac Toe board"></div>
+        <div class="controls">
+          <button id="restart" class="btn primary" type="button">
+            New round
+          </button>
+          <button id="resetScores" class="btn" type="button">
+            Reset scores
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="scoreboard">
+          <div class="stat">
+            <h3>Player X wins</h3>
+            <div id="scoreX" class="value">0</div>
+          </div>
+          <div class="stat">
+            <h3>Player O wins</h3>
+            <div id="scoreO" class="value">0</div>
+          </div>
+          <div class="stat">
+            <h3>Draws</h3>
+            <div id="scoreDraws" class="value">0</div>
+          </div>
+        </div>
+        <div class="tips">
+          Tip: corners are strong starting moves. After each round, click “New
+          round” to keep playing with the same score, or “Reset scores” to start
+          fresh.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const boardEl = document.getElementById('board');
+      const statusEl = document.getElementById('statusText');
+      const restartBtn = document.getElementById('restart');
+      const resetScoresBtn = document.getElementById('resetScores');
+      const scoreXEl = document.getElementById('scoreX');
+      const scoreOEl = document.getElementById('scoreO');
+      const scoreDrawsEl = document.getElementById('scoreDraws');
+
+      const state = {
+        board: Array(9).fill(''),
+        current: 'X',
+        gameOver: false,
+        scores: {
+          X: 0,
+          O: 0,
+          draws: 0,
+        },
+        winLine: [],
+      };
+
+      const winningLines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      function renderBoard() {
+        boardEl.innerHTML = '';
+        state.board.forEach((value, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'cell';
+          if (state.winLine.includes(idx)) {
+            btn.classList.add('win');
+          }
+          btn.type = 'button';
+          btn.textContent = value;
+          btn.disabled = Boolean(value) || state.gameOver;
+          btn.setAttribute('aria-label', `Cell ${idx + 1}`);
+          btn.addEventListener('click', () => handleMove(idx));
+          boardEl.appendChild(btn);
+        });
+      }
+
+      function setStatus(text) {
+        statusEl.textContent = text;
+      }
+
+      function updateScores() {
+        scoreXEl.textContent = state.scores.X;
+        scoreOEl.textContent = state.scores.O;
+        scoreDrawsEl.textContent = state.scores.draws;
+      }
+
+      function checkWin() {
+        return winningLines.find(([a, b, c]) => {
+          return (
+            state.board[a] &&
+            state.board[a] === state.board[b] &&
+            state.board[a] === state.board[c]
+          );
+        });
+      }
+
+      function handleMove(index) {
+        if (state.gameOver || state.board[index]) return;
+        state.board[index] = state.current;
+
+        const winningLine = checkWin();
+        if (winningLine) {
+          state.gameOver = true;
+          state.winLine = winningLine;
+          state.scores[state.current] += 1;
+          setStatus(`Player ${state.current} wins!`);
+        } else if (state.board.every(Boolean)) {
+          state.gameOver = true;
+          state.winLine = [];
+          state.scores.draws += 1;
+          setStatus('Draw! Board is full.');
+        } else {
+          state.current = state.current === 'X' ? 'O' : 'X';
+          setStatus(`Player ${state.current}, make your move.`);
+        }
+
+        updateScores();
+        renderBoard();
+      }
+
+      function restart() {
+        state.board = Array(9).fill('');
+        state.current = 'X';
+        state.gameOver = false;
+        state.winLine = [];
+        setStatus('Player X, make your move.');
+        renderBoard();
+      }
+
+      function resetScores() {
+        state.scores = { X: 0, O: 0, draws: 0 };
+        restart();
+        updateScores();
+      }
+
+      restartBtn.addEventListener('click', restart);
+      resetScoresBtn.addEventListener('click', resetScores);
+
+      // initial paint
+      updateScores();
+      renderBoard();
+    </script>
+  </body>
+</html>

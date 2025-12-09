@@ -1,79 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document 12345</title>
+    <title>AI Coding Hackathon</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1>Document</h1>
-    <!--Complete this index.html file -->
-    <p>This is a paragraph in the index.html file.</p>
-    <a href="about.html">About Page</a>
-    <br />
-    <a href="contact.html">Contact Page</a>
-    <br />
-    <img src="https://via.placeholder.com/150" alt="Placeholder Image" />
-    <br />
-    <ul>
-      <li>Item 1</li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-    </ul>
-    <br />
-    <form action="#" method="post">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" />
-      <br />
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" />
-      <br />
-      <input type="submit" value="Submit" />
-    </form>
-    <br />
-    <table border="1">
-      <tr>
-        <th>Header 1</th>
-        <th>Header 2</th>
-      </tr>
-      <tr>
-        <td>Data 1</td>
-        <td>Data 2</td>
-      </tr>
-    </table>
-    <br />
-    <video width="320" height="240" controls>
-      <source src="movie.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-    <br />
-    <audio controls>
-      <source src="audio.mp3" type="audio/mpeg" />
-      Your browser does not support the audio element.
-    </audio>
-    <br />
-    <nav>
-      <a href="#section1">Section 1</a>
-      |
-      <a href="#section2">Section 2</a>
-    </nav>
-    <br />
-    <section id="section1">
-      <h2>Section 1</h2>
-      <p>This is section 1.</p>
-    </section>
-    <section id="section2">
-      <h2>Section 2</h2>
-      <p>This is section 2.</p>
-    </section>
-    <br />
-    <aside>
-      <h3>Related Information</h3>
-      <p>This is some related information in an aside.</p>
-    </aside>
-    <br />
-    <footer>
-      <p>&copy; 2025 My Website</p>
-    </footer>
+    <div class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">AI Coding Hackathon</p>
+          <h1>Find your project, ship with a crew.</h1>
+          <p class="lede">
+            Browse available builds, join one project at a time, propose new
+            ideas, and switch if you change your mind.
+          </p>
+        </div>
+        <div class="name-box">
+          <label for="nameInput">Enter your name to get started</label>
+          <div class="name-input-row">
+            <input
+              id="nameInput"
+              name="name"
+              type="text"
+              placeholder="e.g. Alex Kim"
+              autocomplete="name"
+            />
+            <button id="saveNameBtn" class="btn primary">Save</button>
+          </div>
+          <p
+            id="nameError"
+            class="form-error"
+            role="alert"
+            aria-live="polite"
+          ></p>
+          <p id="userStatus" class="user-status"></p>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="toolbar">
+          <div class="status" id="selectionStatus"></div>
+          <div class="toolbar-actions">
+            <button id="clearSelectionBtn" class="btn ghost" aria-live="polite">
+              Give up project
+            </button>
+            <button id="resetAppBtn" class="btn ghost">
+              Reset sample data
+            </button>
+          </div>
+        </section>
+
+        <section class="projects-section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Projects</p>
+              <h2>Available builds</h2>
+              <p class="section-sub">Join one at a time. Switch anytime.</p>
+            </div>
+            <div class="count-pill" id="projectCount"></div>
+          </div>
+          <div id="projectGrid" class="project-grid" aria-live="polite"></div>
+          <p id="emptyProjects" class="empty-state" hidden>
+            No projects yet. Propose a new idea to get started.
+          </p>
+        </section>
+
+        <section class="form-section" aria-labelledby="proposeHeading">
+          <div>
+            <p class="eyebrow">Propose</p>
+            <h2 id="proposeHeading">Pitch a new project</h2>
+            <p class="section-sub">
+              Add a title, short description, and optional tech tags.
+            </p>
+          </div>
+          <form id="proposeForm" class="card form-card" novalidate>
+            <div class="form-grid">
+              <label class="field">
+                <span>Project title</span>
+                <input
+                  name="title"
+                  type="text"
+                  placeholder="AI Mentor Chatbot"
+                  required
+                />
+                <small class="form-error" data-error-for="title"></small>
+              </label>
+              <label class="field">
+                <span>Tech tags (comma separated)</span>
+                <input name="tags" type="text" placeholder="JS, Node, OpenAI" />
+              </label>
+            </div>
+            <label class="field">
+              <span>Description</span>
+              <textarea
+                name="description"
+                rows="3"
+                placeholder="What are you building and why?"
+                required
+              ></textarea>
+              <small class="form-error" data-error-for="description"></small>
+            </label>
+            <div class="form-actions">
+              <button class="btn primary" type="submit">Submit idea</button>
+              <p id="proposeGuard" class="guard-note">
+                Enter your name above to propose an idea.
+              </p>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <div
+      id="projectModal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+      hidden
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close modal" id="closeModalBtn">
+          ✕
+        </button>
+        <p class="eyebrow" id="modalTags"></p>
+        <h3 id="modalTitle"></h3>
+        <p id="modalDescription" class="modal-body"></p>
+        <p id="modalCount" class="modal-count"></p>
+        <div class="modal-actions">
+          <button id="modalJoinBtn" class="btn primary">Join project</button>
+          <button id="modalLeaveBtn" class="btn ghost">Give up</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <script src="main.js"></script>
   </body>
 </html>
